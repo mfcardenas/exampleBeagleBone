@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>BeagleBoard.org - Grove 3Axis Digital Gyro</title>
+  <meta name="keywords" content="Beagle Board, BeagleBoard, beagleboard.org, BeagleBone, BeagleBoard-xM, bealgeboard, open hardware, open source, Linux, computer" />
+  <link href="http://feeds.feedburner.com/BeagleBoard" rel="alternate" title="BeagleBoard.org news feed" type="application/atom+xml" />
+  <link rel="icon" href="/bone101/static/beagle.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="/bone101/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" type="text/css" media="screen" href="/bone101/static/common.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/bone101/static/login.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/bone101/static/beagle.css" />
+
+
+  <script src="/bone101/static/jquery.js"></script>
+
+  <script src="/bone101/static/bonescript-demo.js"></script>
+
+
+</head><body>
+ <a href="https://github.com/beagleboard/bone101"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://github-camo.global.ssl.fastly.net/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a> 
+ <div class="top">
+  <div class="top-header"><a href="http://beagleboard.org"><img src="/bone101/static/images/beagle_logo_hdr.gif" alt="beagleboard.org" border="0" width="326" height="60" /></a>
+   <div class="social">
+    <span style="padding-left:8px"><a href="http://facebook.com/beagleboard" name="header_facebook_icon"><img src="/bone101/static/images/icon_facebook.png" width="27" height="28" alt="facebook" border="0"/></a></span>
+    <span style="padding-left:8px"><a href="http://twitter.com/beagleboardorg" name="header_twitter_icon"><img src="/bone101/static/images/icon_twitter.png" width="27" height="28" border="0" alt="twitter"/></a></span>
+    <span style="padding-left:8px"><a href="http://www.linkedin.com/groups/BeagleBoardorg-1474607?gid=1474607&mostPopular=&trk=tyah" name="header_linkedin_icon"><img src="/bone101/static/images/icon_linkedin.png" width="27" height="28" border="0" alt="linkedin" /></a></span>
+    <span style="padding-left:8px"><a href="https://www.youtube.com/user/jadonk" name="header_youtube_icon"><img src="/bone101/static/images/youTube-icon.png" width="27" height="28" border="0" alt="YouTube" /></a></span>
+    <span style="padding-left:8px"><a href="http://plus.google.com/+beagleboard" name="header_google+_icon"><img src="/bone101/static/images/icon_google+.png" width="27" height="28" border="0" alt="google+"/></a></span>
+   </div> 
+  </div>
+ </div>
+ <a name="top" id="top"></a>
+ <div id="wrapper">
+  <div id='cssmenu'></div>
+  <div id="content">
+   <div id="contentbuffer">
+    <h2>Demos</h2>
+<div id='side-menu' class="t3_sidebar">
+    <ul class="left-menu"><strong>Navigation</strong>
+        <li><a href="/bone101/static/side-menu.html">Menu contents</a></li>
+    </ul>
+</div>
+
+<div class="t3_content_1"><div id='connect-status'></div><div id="content_child">
+<h1>Demo: Grove 3Axis Digital Gyro</h1>
+<p>This <a href="http://www.seeedstudio.com/depot/Grove-3Axis-Digital-Gyro-p-750.html">Grove 3Axis Digital Gyro</a>  module based on ITG 3200. It is the world’s first single-chip, digital-output, 3-axis MEMS motion processing gyro optimised for gaming, 3D mice, and motion-based remote control applications for Internet connected Digital TVs and Set Top Boxes. The ITG-3200 features three 16-bit analog-to-digital converters (ADCs) for digitising the gyro outputs, a user-selectable internal low-pass filter bandwidth, and a Fast-Mode I2C (400kHz) interface. 
+<br>
+Please visit <a href="http://www.seeedstudio.com/wiki/Grove_-_3-Axis_Digital_Gyro">SeeedStudio's wiki page</a> for more info about this sensor.
+</p>
+<br>
+
+
+
+<h2>Example</h2>
+<pre id="code" class="use-editor" syntax="python" style="height:450px;">
+import sys, smbus, time, signal
+import math
+
+# Function: Read a byte with the register address of ITG3200.         
+# Parameter:-uint8_t,  _register,the register address  of ITG3200 to read 
+# Return:	-int8_t,the byte that is read from the register.		  
+
+bus = smbus.SMBus(1)
+
+class ITG3200():
+    global bus
+    def __init__(self):
+        self.GYRO_ADDRESS=0x68
+        # ITG3200 Register Defines
+        self.ITG3200_WHO=0x00
+        self.ITG3200_SMPL=0x15
+        self.ITG3200_DLPF=0x16
+        self.ITG3200_INT_C=0x17
+        self.ITG3200_INT_S=0x1A
+        self.ITG3200_TMP_H=0x1B
+        self.ITG3200_TMP_L=0x1C
+        self.ITG3200_GX_H=0x1D
+        self.ITG3200_GX_L=0x1E
+        self.ITG3200_GY_H=0x1F
+        self.ITG3200_GY_L=0x20
+        self.ITG3200_GZ_H=0x21
+        self.ITG3200_GZ_L=0x22
+        self.ITG3200_PWR_M=0x3E
+        
+        self.x_offset = 0
+	self.y_offset = 0
+	self.z_offset = 0
+
+# ********************************************************************
+# Function: Initialization for ITG3200.         					  
+    def init(self):  
+        bus.write_byte_data(self.GYRO_ADDRESS, self.ITG3200_PWR_M, 0x80)
+        bus.write_byte_data(self.GYRO_ADDRESS, self.ITG3200_SMPL, 0x00)
+        bus.write_byte_data(self.GYRO_ADDRESS, self.ITG3200_DLPF, 0x18)
+
+    def read(self, addressh, addressl):
+        t_data = bus.read_byte_data(self.GYRO_ADDRESS, addressh)
+        data = t_data << 8        
+        data |= bus.read_byte_data(self.GYRO_ADDRESS, addressl)
+        return data
+
+# Function: Get the temperature from ITG3200 that with a on-chip
+#            temperature sensor.                                
+    def getTemperature(self):	
+        temp = self.read(self.ITG3200_TMP_H, self.ITG3200_TMP_L)
+        temperature = 35 + (temp + 13200) / 280
+        return temperature
+
+# Function: Get the contents of the registers in the ITG3200
+#           so as to calculate the angular velocity.        
+    def getXYZ(self):
+        x = self.read(self.ITG3200_GX_H,self.ITG3200_GX_L) + self.x_offset
+        y = self.read(self.ITG3200_GY_H,self.ITG3200_GY_L) + self.y_offset
+        z = self.read(self.ITG3200_GZ_H,self.ITG3200_GZ_L) + self.z_offset
+        return x, y, z
+# Function: Get the angular velocity and its unit is degree per second.
+    def getAngularVelocity(self):
+        x,y,z = self.getXYZ()        
+        ax = x/14.375
+        ay = y/14.375
+        az = z/14.375
+        
+        return ax, ay, az
+
+    def zeroCalibrate(self, samples, sampleDelayMS): 
+        self.x_offset = 0
+        self.y_offset = 0
+        self.z_offset = 0
+	x_offset_temp = 0
+	y_offset_temp = 0
+	z_offset_temp = 0
+        x,y,z = self.getXYZ()
+        for i in range(samples):
+	    time.sleep(sampleDelayMS/1000.0)
+	    x,y,z = self.getXYZ()
+	    x_offset_temp += x
+	    y_offset_temp += y
+	    z_offset_temp += z
+        print "offet_temp ", x_offset_temp, x_offset_temp, x_offset_temp
+        self.x_offset = abs(x_offset_temp)/samples
+        self.y_offset = abs(y_offset_temp)/samples
+        self.z_offset = abs(z_offset_temp)/samples
+        if x_offset_temp > 0:
+            self.x_offset = -self.x_offset
+        if y_offset_temp > 0: 
+            self.y_offset = -self.y_offset
+        if z_offset_temp > 0:
+            self.z_offset = -self.z_offset
+
+if __name__=="__main__":
+    gyro = ITG3200()
+    gyro.init()
+    gyro.zeroCalibrate(5, 5)
+    print "offset: ", gyro.x_offset, gyro.y_offset, gyro.z_offset
+    time.sleep(2)
+    
+    while True:
+        print 'Temperature = ', gyro.getTemperature()
+#        x, y, z = gyro.getXYZ()
+#        print "x y z: ", x, y, z
+        ax, ay, az = gyro.getAngularVelocity()
+        print "ax = ", int(ax),"ay = ", int(ay),"az = ", int(az)
+        time.sleep(0.5)
+</pre>
+<br></br>
+<img align="right" width="60%" src="/bone101/static/images/GroveImages/Grove_Gyro_bb.png"/>
+<br></br>
+<h2>Build and execute instructions</h2>
+<ul>
+ <li>Connect the Grove Digital Gyro to J4 of the board</li>
+ <li>Open <a href="http://192.168.7.2:3000/ide.html">Cloud9 IDE</a> in your browser.</li>
+ <li>In the left of the browser click "Grove Demos" folder and open the "Grove_3_Axis_Digital_Gyro.py
+" file.</li>
+ <li>Click "RUN" on the Cloud9 IDE and it will output the temperature and angular velocity information by the Terminal Window.</li>
+</ul>
+
+<h2>See also</h2>
+<h3>Topics</h3>
+<ul>
+ <li><a href="http://www.seeed.cc/beaglebone_green">BeagleBone Green</a></li>
+ <li><a href="http://192.168.7.2:3000/ide.html">Cloud9 IDE</a></li>
+</ul>
+<h3>Examples</h3>
+<ul>
+ <li><a href="/bone101/Support/BoneScript/Grove_3Axis_Digital_Accelerometer">Grove-3-Axis Digital Accelerometer</a>
+ <li><a href="/bone101/Support/BoneScript/Grove_3Axis_Digital_Compass">Grove-3-Axis Digital Compass</a>
+</ul>
+</div>
+<div id="list">
+
+</div>
+<br/>
+
+
+</div>
+
+   </div>
+  </div>
+  <div class="footer">
+   <div class="social">
+    <span style="padding-left:8px"><a href="http://facebook.com/beagleboard" name="header_facebook_icon"><img src="/bone101/static/images/icon_facebook.png" width="27" height="28" alt="facebook" border="0"/></a></span>
+    <span style="padding-left:8px"><a href="http://twitter.com/beagleboardorg" name="header_twitter_icon"><img src="/bone101/static/images/icon_twitter.png" width="27" height="28" border="0" alt="twitter"/></a></span>
+    <span style="padding-left:8px"><a href="http://www.linkedin.com/groups/BeagleBoardorg-1474607?gid=1474607&mostPopular=&trk=tyah" name="header_linkedin_icon"><img src="/bone101/static/images/icon_linkedin.png" width="27" height="28" border="0" alt="linkedin" /></a></span>
+    <span style="padding-left:8px"><a href="https://www.youtube.com/user/jadonk" name="header_youtube_icon"><img src="/bone101/static/images/youTube-icon.png" width="27" height="28" border="0" alt="YouTube" /></a></span>
+    <span style="padding-left:8px"><a href="http://plus.google.com/+beagleboard" name="header_google+_icon"><img src="/bone101/static/images/icon_google+.png" width="27" height="28" border="0" alt="google+"/></a></span>
+   </div>
+   <div id="login"></div>
+   <div id="footer-col1">
+    <ul>
+     <li><a target="_blank" href="http://beagleboard.org/about">About Us</a></li>
+     <li><a target="_blank" href="http://beagleboard.org/support">Support</a></li>
+     <li><a target="_blank" href="http://beagleboard.org/buy">Distributors</a></li>
+    </ul>
+   </div>
+   <div id="footer-col2">
+    <ul>
+     <li><a target="_blank" href="http://beagleboard.org/chat">Live chat</a></li>
+     <li><a target="_blank" href="http://beagleboard.org/discuss">Mailing list</a></li>
+     <li><a target="_blank" href="http://beagleboard.org/project">Projects</a></li>
+    </ul>
+   </div>
+   <div id="footer-col3">
+    <ul>
+     <li><a target="_blank" href="http://beagleboard.org/privacy">Privacy Policy</a></li>
+     <li><a target="_blank" href="http://beagleboard.org/terms">Terms of Use</a></li>
+    </ul>
+   </div>
+   <div id="cc"><a href="http://creativecommons.org/about/license/" target="_blank"><img src="/bone101/static/images/88x31.png" alt="Creative Commons - Conditions - Attribution and Share Alike" border="0" width="88" height="31" /></a><span style="padding-left:8px">Except where otherwise noted, content on this site is licensed under a Creative Commons Attribution-Share Alike 3.0 license </span></div>
+  </div>
+ </div>
+ <div id="fb-root"></div>
+</body></html>
